@@ -1,5 +1,30 @@
 from voice import listen, speak
 from commands import greet, tell_time, open_website, search_google, open_app
+from llm_gemini import ask_gemini
+import time
+import sys
+import threading
+
+def thinking_timer():
+    print("")  # Newline for clean console output
+    start = time.time()
+    while True:
+        elapsed = time.time() - start
+        sys.stdout.write(f"\r🤖 Thinking... {elapsed:.1f} seconds")
+        sys.stdout.flush()
+        time.sleep(0.1)
+        if stop_timer:
+            break
+    print("\n")
+
+# Global flag
+stop_timer = False
+
+def start_thinking():
+    global stop_timer
+    stop_timer = False
+    threading.Thread(target=thinking_timer).start()
+    
 
 def main():
     greet()
@@ -18,6 +43,11 @@ def main():
         elif "exit" in user_input or "quit" in user_input:
             speak("Goodbye!")
             break
+        # Inside the main loop:
+        else:
+            start_thinking()
+            response = ask_gemini(user_input)
+            stop_timer = True
 
 if __name__ == "__main__":
     main()
