@@ -46,7 +46,7 @@ def main():
         # Inside the main loop:
         else:
             start_thinking()
-            response = ask_gemini(user_input)
+            ask_gemini(user_input)
             stop_timer = True
 
 if __name__ == "__main__":
