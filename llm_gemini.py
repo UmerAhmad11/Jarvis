@@ -2,6 +2,7 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 from voice import speak
+import time
 
 # Load API key
 load_dotenv()
@@ -44,16 +45,14 @@ def ask_gemini(prompt):
         return ""
 
     try:
-        print("🤖 Thinking...", end=" ", flush=True)
-        import time
-        start_time = time.time()
         convo.send_message(prompt)
+        print("🤖 Thinking...", end=" ", flush=True)
+        start_time = time.time()
         reply = convo.last.text
         elapsed = round(time.time() - start_time, 1)
         print(f"{elapsed} seconds")
         print("Jarvis:", reply)
         speak(reply)
-        return reply
     except Exception as e:
         speak("Sorry, I ran into an error with Gemini.")
         print("❌ Gemini Error:", e)
