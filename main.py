@@ -4,6 +4,10 @@ from llm_gemini import ask_gemini
 import time
 import sys
 import threading
+from llm_gemini import load_gemini
+
+# Launch Gemini preload in parallel
+threading.Thread(target=load_gemini).start()
 
 def thinking_timer():
     print("")  # Newline for clean console output
@@ -44,8 +48,8 @@ def main():
             speak("Goodbye!")
             break
         # Inside the main loop:
+
         else:
-            start_thinking()
             ask_gemini(user_input)
             stop_timer = True
 
