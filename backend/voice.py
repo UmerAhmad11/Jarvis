@@ -1,18 +1,28 @@
 import speech_recognition as sr
 import pyttsx3
+import threading
 
 engine = pyttsx3.init()
 engine.setProperty('rate', 150)
 
+tts_lock = threading.Lock()
+
+def _speak_worker(text):
+    with tts_lock:
+        try:
+            print("Jarvis:", text)
+            engine.say(text)
+            engine.runAndWait()
+        except RuntimeError:
+            print("⚠️ TTS engine is already speaking. Ignored.")
+
 def speak(text):
-    print("Jarvis:", text)
-    engine.say(text)
-    engine.runAndWait()
+    threading.Thread(target=_speak_worker, args=(text,), daemon=True).start()
 
 def listen():
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Listening...")
+        print("🎤 Listening...")
         audio = recognizer.listen(source)
     try:
         command = recognizer.recognize_google(audio)
