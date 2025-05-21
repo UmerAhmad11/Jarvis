@@ -31,18 +31,17 @@ def load_gemini():
         print("❌ Error initializing Gemini:", e)
         
 
-# Ask Gemini Function (Chat-based version)
 def ask_gemini(prompt):
     global convo
     if convo is None:
         speak("Gemini is not initialized yet.")
         print("❌ Gemini session not initialized. Call load_gemini() first.")
-        return ""
+        return "Gemini is not initialized yet."
 
     prompt = prompt.strip()
     if not prompt:
         print("⚠️ Empty prompt received. Skipping Gemini call.")
-        return ""
+        return "No input provided."
 
     try:
         convo.send_message(prompt)
@@ -53,8 +52,9 @@ def ask_gemini(prompt):
         print(f"{elapsed} seconds")
         print("Jarvis:", reply)
         speak(reply)
+        return reply or "I'm not sure how to respond."
     except Exception as e:
         speak("Sorry, I ran into an error with Gemini.")
         print("❌ Gemini Error:", e)
-        return ""
+        return "Sorry, Gemini ran into an error."
 
